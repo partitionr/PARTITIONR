@@ -4,14 +4,20 @@
 #'     three types of functions.
 #'
 #' @section Partition Function:
-#' The partition function partitions diversity across nested scales.
+#' \code{\link{partition}} allows for both individual- and sample-based randomizations
+#'     of the provided data. Individual-based randomizations can be run with data
+#'     from single level and non-nested experimental designs. Sample-based randomizations
+#'     can ONLY be run with data from nested (hierarchical) experimental designs.
 #'
 #' @section Support Functions:
 #' The support functions provide an opportunity to visualize the data and output of
-#'     the \code{\link{partition}} function. These functions are good.
+#'     the \code{\link{partition}} function. \code{\link{partiplot}} visualizes the
+#'     output of \code{\link{partition}}. \code{\link{summary.partition}} provides
+#'     observed diversity, expected diversity, and associated p-values (based on
+#'     randomizations). 
 #'
 #' @section Community Analysis Functions:
-#' The community analysis functions are NOT FUNCTIONAL YET.
+#' The community analysis functions are NOT functional yet. Working through these.
 #'
 #' @importFrom plyr rbind.fill
 #' @importFrom dplyr group_by_

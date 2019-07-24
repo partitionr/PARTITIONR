@@ -2,7 +2,9 @@
 title: "Intro to PARTITIONR"
 author: "M.B. Mahon, M.J. Cunningham-Minnick, T.O. Crist, J.A. Veech"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{Intro to PARTITIONR}
   %\VignetteEngine{knitr::rmarkdown}
@@ -40,7 +42,7 @@ To get started using **PARTITIONR**, load *R* and the **PARTITIONR** package (as
 
 ```{r}
 # library(devtools)
-# install_github("mahonmb/PARTITIONR")
+# install_github("partitionr/PARTITIONR", build_vignettes = TRUE)
 # library(PARTITIONR)
 
 ```
