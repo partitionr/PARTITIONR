@@ -9,7 +9,7 @@ See our github page at https://github.com/partitionr/PARTITIONR
 This version of 'PARTITIONR' is the first publically available R version of the standalone software "PARTITION" developed by T.O. Crist and J.A. Veech (see Crist et al. 2003, DOI: 10.1086/378901 for details). It is highly recommended that you consult 'vignette("PARTITIONR")' to familiarize yourself with the syntax of 'PARTITIONR'. 
 
 ### Example
-
+```
 # Install master branch from github
 library(devtools)
 install_github("partitionr/PARTITIONR@master", build_vignette = TRUE)
@@ -51,3 +51,4 @@ summary(indrich, p.value = "two-sided")
 
 # Plot additive beta as a line graph
 plot_partition(indrich, beta.type = "add", plot.type = "line")
+```
