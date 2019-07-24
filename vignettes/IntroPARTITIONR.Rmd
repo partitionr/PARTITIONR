@@ -40,7 +40,7 @@ To get started using **PARTITIONR**, load *R* and the **PARTITIONR** package (as
 
 ```{r}
 # library(devtools)
-# install_github("mahonmb/PARTITIONR")
+# install_github("partitionr/PARTITIONR", build_vignettes = TRUE)
 # library(PARTITIONR)
 
 ```

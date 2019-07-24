@@ -1,16 +1,18 @@
-citHeader("To cite PARTITION in publictions use:")
+citHeader("To cite PARTITIONR in publictions use:")
 
 citEntry(entry       = "Unpublished",
-         title       = "{PARTITION}ing Species Diversity across Spatial Scales",
-         author      = personList(as.person("Thomas Crist"),
-                                  as.person("Michael Mahon"),
+         title       = paste({PARTITIONR}: R package for partitioning species",
+                             "diversity across spatial scales."),
+         author      = personList(as.person("Michael Mahon"),
                                   as.person("Michael Cunningham-Minnick"),
+                                  as.person("Thomas Crist"),
                                   as.person("Hannah Penn"),
                                   as.person("Joseph Veech"),
                                   as.person("Keith Summerville")),
          year        = "2019",
          note        = "R package version 0.0.1",
-         textVersion = paste("Thomas Crist, Michael Mahon, Michael Cunningham-Minnick,",
-                             "Hannah Penn, Joseph Veech, and Keith Summerville (2018).",
-                             "PARTITIONing Species Diversity across Spatial Scales.",
+         textVersion = paste("Michael Mahon, Michael Cunningham-Minnick, Thomas Crist",
+                             "Hannah Penn, Joseph Veech, and Keith Summerville (2019).",
+                             {PARTITIONR}: R package for partitioning species",
+                             "diversity across spatial scales."
                              "R package version 0.0.1."))
