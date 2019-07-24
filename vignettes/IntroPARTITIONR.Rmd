@@ -1,0 +1,131 @@
+---
+title: "Intro to PARTITIONR"
+author: "M.B. Mahon, M.J. Cunningham-Minnick, T.O. Crist, J.A. Veech"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Intro to PARTITIONR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+**PARTITIONR** is a package for community ecologists. This document explains how to partition diversity across nested and non-nested scales using the **PARTITIONR** package. This document is a basic introduction to this technique. The current document describes the main function in the **PARTITIONR** package. For all functions, the canonical references are the **PARTITIONR** help pages, and the most important support functions are listed within these documents.
+
+## 1 Introduction
+
+Diversity partitioning is a method of decomposing some total amount of diversity (*gamma*) into the componenets of mean diversity within samples (*alpha*) and diversity among samples (*beta*). It can be sued with a wide variety of diversity indices, including additive and multiplicative species richness and *q*-diversity indices. Diversity partitioning can be applied to a range of data sets, including those with unbalanced sampling design, substantial variation in the number of individuals distributed among samples, and sampling designs that are hierarchical (multiple nested levels).
+
+**PARTITIONR** calculates alpha and beta diversity and uses data randomizations (i.e., Monte Carlo methods) to derive expected values of alpha and beta diversity that would be obtained if individuals or samples were randomly distributed. The randomization allows for significance testing of the observed diversity estimates. The statistical rationale and operational description of individual- and sample-based randomizations can be found in Crist et al. (2003).
+
+**PARTITIONR** is the *R* package equivalent to the *PARTITION 3.0* software developed by Crist and Veech (2009). Through the use of main and supporting functions **PARTITIONR** allows for easy data entry, partitioning and significance testing, graphical and tabular display of results, and printing/saving of results.
+
+## 2 Getting Started
+
+### 2.1 Data Format
+
+To use the **PARTITIONR** package, your data must be in a species matrix format with columns representing species and rows representing samples. There should be species and sample identifiers present within the data (i.e. column headers representing species and columns representing sample identifiers **levels**). Note: Be sure to enter zeros into cells representing samples where the species was not present. See below for example of correct data frame setup.
+
+### 2.2 Loading the **PARTITIONR** package
+
+
+To get started using **PARTITIONR**, load *R* and the **PARTITIONR** package (as below). NOTE: the first time you run **PARTITIONR**, you will need to install the package; for the most up-to-date version of the **PARTITIONR** package, use the version located on GitHub.
+
+```{r}
+# library(devtools)
+# install_github("mahonmb/PARTITIONR")
+# library(PARTITIONR)
+
+```
+
+## 3 Partitioning Data
+
+The **PARTITIONR** package contains the ```partition()``` function. In this section, we describe the versatility of the ```partition``` function. **PARTITIONR** can analyze any number of hierarchical (nested) levels of data. 
+
+### 3.1 Sampling Design
+
+```h.level``` refers to the columns coding for information regarding your data, specifically the information for each hierarchical level for each sample. The levels should be entered starting with the lowest level and ending with the highest level of your sampling design. ```partition()``` internally handles both balanced and unbalanced data, so there is no need to specify this.
+
+```low.level``` refers to the lowest level of analysis. For non-nested data, enter ```1``` for ```low.level```. The lowest level of analysis is the level that you wish to begin the partition of data. For example, your dataset may consist of three levels of data but you wish to ignore (not analyze) the first level, so you would enter ```2``` as the lowest level of analysis. In essence, this would be treating samples at Level 1 as subsamples of the samples at Level 2. Behind the scenes, ```partition()``` combines these subsamples to form the Level 2 samples (you need not re-organize the data yourself). The lowest level of analysis is also the lowest level of the data set that will receive any randomization (see section “Randomization Method”).
+
+### 3.2 Randomization Method
+
+The user can select either an individual-based (```hyp.test = "INDIVIDUAL"```) or sample-based (```hyp.test = "SAMPLE"```) randomization process. Each one provides a test of significance on the observed values of alpha- and beta-diversity, but they differ in their implementation. Briefly, individual-based randomization randomly reassigns each individual of the dataset to any Level 1 sample (or sample at the lowest level of analysis, j). Sample-based randomization randomly reassigns an entire level j-1 sample to a sample at level j within the same level j+1 sample as the actual data. Sample-based randomization cannot be applied when the lowest level of analysis = 1, but it can be applied when lowest level of analysis = highest level of data. In such a case, level j-1 samples are randomly assigned to any level j sample.
+
+Note that if the data consist of only one level of sampling then individual-based randomization is the only randomization process possible. Much more detail about these randomization procedures can be found in Crist et al. (2003).
+
+### 3.3 Selection of *Q*-diversity Metrics
+
+```partition()``` provides the user with the option of selecting a *q*-value for calculating alpha and beta diversity. The default *q*-value for ```partition()``` is ```0``` (species richness). Any positive *q*-value can be used. *Q*-diversity metrics are calculated from the proportional abundances of species in the samples. For alpha diversity, a *q*-diversity metric (other than 1) is calculated as $$^{q}D_\alpha = \left(\frac{1}{N}\sum_{i=1}^{S}p_{i1}^q + \frac{1}{N}\sum_{i=1}^{S}p_{i2}^q + ... + \frac{1}{N}\sum_{i=1}^{S}p_{iN}^q\right)^{1/(1-q)}$$
+When *q* is equal to 1, alpha diversity is calculated as $$^{1}D_\alpha = \exp\left(-\frac{1}{N}\sum_{i=1}^{S}p_{i1}\log p_{i1}-\frac{1}{N}\sum_{i=1}^{S}p_{i2}\log p_{i2} - ... - \frac{1}{N}\sum_{i=1}^{S}p_{iN}\log p_{iN}\right)$$ For gamma diversity, a non-1 *q*-diversiy metric is calculated from all the samples poooled together: $$^{q}D_\gamma = \left\{ \sum_{i=1}^{S}\left[\frac{1}{N}(p_{i1} + p_{i2} + ... + p_{iN}) \right]^q \right\} ^{1/(1-q)} $$
+ When *q* is equal to 1, gamma diversity is calculated as $$^{1}D_\gamma = \exp\left[-\sum_{i=1}^{S}\frac{1}{N}\left(p_{i1}+...+p_{iN}\right)\log\frac{1}{N}\left(p_{i1}+...+p_{iN}\right)   \right]$$ The *q*-diversity metric is then calculated as ENTER BOTH ADDITIVE AND MULTIPLICATIVE. See Jost (2007) and ... for more information. Users need to be aware that small values of *q* give greater influence to "rare" species in the calculation of diversity. The smallest possible value for *q* is ```0```; this *q*-value corresponds to the species richness. See Hill (1973), Magurran (2004), and Jost (2006) for more discussion of *q*-diversity metrics. The Shannon Index (measure of species evenness) is represented by ```q = 1```. The output produced should be interpretted as Shannan diversity, rather than Shannon entropy (index). The Simpson Index (measure of species dominance) is represented by ```q = 2```. The output produced should be interpretted as Simpson diversity, rather than Simpson index. 
+
+
+
+
+
+
+### 3.4 Partitioning Diversity
+
+Once you have provided all of the necessary information in the ```partition()``` function, run the line(s) of code. NOTE: Tt is important to set the ouput of the function as an object (i.e. ```part.object <- partition()```), as this will allow you to most efficiently use the supporting functions.
+
+The function will partition the observed data and the random datasets that are created as a result of the randomization process that you selected. In essence, these random datasets provide a statistical null distribution (not a sampling distribution) of each diversity component at each level. Comparison of the observed diversity value to the corresponding null distributions is a test of the significance of the observed value as either a significantly high value (large amount of diversity) or low value (small amount of diversity) (See Below).
+
+It will take your computer a few minutes (or longer) to aprtition your data depending on the number of randomizations that you specify (default is 1000). Also, the total number of samples and levels of nestedness in your dataset has a large effect on the speed of ```partition()```. The provided dataset (MAYBE) with 5 nested levels and ... samples takes upwards of 3.5 and 7 minutes to run for individual- and sample-based randomizations, respectively. Keep this in mind! Future versions of **PARTITIONR** will attempt to incorporate parallel processing to reduce run time of the ```partition()``` function. 
+
+```{r, eval = FALSE}
+#> Read in the data
+data(Beetles)
+
+#> Individual-based randomization of Species Richness
+btl.q0 <- partition(sp = Beetles, h.level = c("TREE", "Hab_St", "SITE", "ECO"), low.level = 1,
+                       q = 0, hyp.test = "INDIVIDUAL", sim.rand = 1000)
+
+#> Sample-based randomization of Shannon Diversity
+btl.q1 <- partition(sp = Beetles, h.level = c("TREE", "Hab_St", "SITE", "ECO"), low.level = 1,
+                       q = 1, hyp.test = "SAMPLE", sim.rand = 1000)
+
+#> No randomization (just observed values) of Simpson Diversity
+btl.q2 <- partition(sp = Beetles, h.level = c("TREE", "Hab_St", "SITE", "ECO"), low.level = 1,
+                       q = 2, hyp.test = "NONE", sim.rand = 1000)
+
+```
+
+### 3.5 Interpreting Results
+
+After the dat aare partitioned, results can be viewed in tables and figures. To get a table of the observed and expected alpha- and beta-diversity values and associated p-values run ```summary()``` on your ```partition``` object. The p-value is the proportion of the randomized datasets that provided a diversity value *greater than* the observed value. Therefore, a very small p-value (p < 0.05) indicates that the observed diversity values is significantly large. The opposite is also true: a large p-value (p > 0.95) indicated a large proportion of the randomized datasets produced a greater diversity value. Alternatively, p = 0.975 may be very strong evidence that the observed beta-diversity is *not* significantly large without also necessarily being indicative of a significantly low value. This post-hoc approach to inferring significance of diversity values without *a priori* specifying a high or low value is somewhat controversial. Therefore, one should hypothesize *a priori* whetehr an observed diversity value should be high or low. We provide for this option within the ```summary()``` function, as adding ```, p.val = "two-sided"``` will provide the user with penalized significance inference by which a *significant* result would be indicated by either p<0.025 (observed value is significantly large) or p>0.975 (observed value is significantly small).
+
+The null parameters (expected) provided may be useful in further interpreting the significance of the observed diversity values in lihgt of what is possible in randomized data. Note: do not mistake the null distribution (expected) with a sampling distribution produced through bootstrap or jack-knife approaches.
+
+A stacked bar chart is a useful graphical display of partitioned data. To get such a figure, use the ```partiplot()``` function and specify ```plot.type = "bar"```. Both the observed and expected partitions are shown.
+
+Finally, you can visualize change in alpha- and beta-diversity by using a line plot. To get such a figure, use the ```partiplot()``` function and specify ```plot.type = "line"```. Both the observed and expected partitions are shown. This is particularly useful when you have multiple levels of sampling.
+
+
+```{r, eval = FALSE}
+##Summary of Shannon diversity
+summary(btl.q1, p.val = "two-sided")
+
+#> Additive beta-diversity visualized with a line plot
+partiplot(spid.part, beta.type = "add", plot.type = "line")
+
+```
+
+
+### 4 General Notes
+
+Be aware that the ```partition()``` function requires a large amount of computing power. More RAM and faster processor will allow for the ```partition()``` function to run faster. Additionally, we highly recommend running the function with 10,000 iterations, as this provides the best insight into the expected, null distribution of your data. This will take a relatively long time. Be patient, please.
+
+Finally, if you have any questions or errors, please direct them to our GitHub repository or any of the authors on the author list.
+
+
+
+
+

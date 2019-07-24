@@ -1,0 +1,48 @@
+Type: Package
+Package: PARTITIONR
+Version: 0.0.1
+Title: Heirarchical Partitioning of Diversity
+Description: Heirarchical partitioning of diversity for community ecologists. 
+    This package is the equivalent to the PARTITION software developed by Crist
+    et al. (2003). PARTITION calculates alpha and beta diversity and uses data
+    randomization (i.e., Monte Carlo methods) to derive expected values of
+    alpha and beta diversity that would be obtained if individuals or samples
+    were randomly distributed. The randomization also allows for significance
+    testing of the observed diversity estimates. The statistical rationale and
+    operational description of INDIVIDUAL- and SAMPLE-based randomization can
+    be found in Crist et al. (2003). This package can utilize unbalanced data,
+    can use both additive and multiplicative species richness and q-diversity
+    measures of diversity, and both nested and non-nested sampling designs.
+Date: Sys.date()
+Authors@R: c(
+    person("Michael", "Mahon", , "mahonmb@miamioh.edu", role = c("aut","cre")),
+    person("Michael", "Cunningham-Minnick", role = "aut"),
+    person("Hannah", "Penn", role = "aut"),
+    person("Thomas", "Crist", role = "aut"),
+    person("Joseph", "Veech", role = "aut"),
+    person("Keith", "Summerville", role = "aut")
+    )
+Imports:
+    plyr (>= 1.8.4),
+    dplyr (>= 0.7.4),
+    purrr (>= 0.2.4),
+    methods (>= 3.4.2),
+    magrittr (>= 1.5.0),
+    parallel (>= 3.5.0),
+    doParallel (>= 1.0.11),
+    foreach (>= 1.4.4)
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat
+URL: https://github.com/mahonmb/PARTITIONR
+BugReports: https://github.com/mahonmb/PARTITIONR/issues
+Depends:
+    R (>= 3.1.2),
+    ggplot2 (>= 2.2.1)
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+Build: 0.0.1
+VignetteBuilder: knitr
+RoxygenNote: 6.1.1
