@@ -12,7 +12,7 @@ na.q <- function(x,w){
 ## indipart
 ## function for individual randomization partitioning
 
-indipart <- function(species.num, h.level, n1, sim.rand, q, sp.prop){
+indipart <- function(species.num, levels, n1, perms, q, sp.prop){
 
   spp.vec <- c()
   rvec <- rand.betas.add <- rand.betas.mult <-  rand.alpha <- pval.add <- NULL
@@ -24,13 +24,13 @@ indipart <- function(species.num, h.level, n1, sim.rand, q, sp.prop){
   }
 
   if(n1 == 1){
-    hyp.alpha <- array(0, sim.rand)
-    hyp.gamma <- array(0, sim.rand)
-    rand.betas.add <- array(0, sim.rand)
-    rand.betas.mult <- array(0, sim.rand)
+    hyp.alpha <- array(0, perms)
+    hyp.gamma <- array(0, perms)
+    rand.betas.add <- array(0, perms)
+    rand.betas.mult <- array(0, perms)
 
     if(q != 1){
-      for (i in 1:sim.rand) {                                          # For each krand simulations, do the following:
+      for (i in 1:perms) {                                          # For each krand simulations, do the following:
         rvec <- split(spp.vec, sample(length(rowSums(sp.prop[[1]])),
                                       length(spp.vec), replace = TRUE)) # Randomize INDIVIDUALs into Sites
         al.ob <- plyr::rbind.fill(
@@ -56,7 +56,7 @@ indipart <- function(species.num, h.level, n1, sim.rand, q, sp.prop){
     }
 
     if(q == 1){
-      for (i in 1:sim.rand) {                                          # For each krand simulations, do the following:
+      for (i in 1:perms) {                                          # For each krand simulations, do the following:
         rvec <- split(spp.vec, sample(length(rowSums(sp.prop[[1]])),
                                       length(spp.vec), replace = TRUE)) # Randomize INDIVIDUALs into Sites
         al.ob <- plyr::rbind.fill(
@@ -97,13 +97,13 @@ indipart <- function(species.num, h.level, n1, sim.rand, q, sp.prop){
   else if(n1 != 1){
     for(i in 1:length(sp.prop)){
       hyp.alpha[[i]] = array(0,length(rowSums(sp.prop[[i]])))
-      rand.betas.mult[[i]]=array(0, sim.rand)
+      rand.betas.mult[[i]]=array(0, perms)
     }
-    rand.betas.add <- data.frame(matrix(NA, nrow = length(sp.prop), ncol = sim.rand))
+    rand.betas.add <- data.frame(matrix(NA, nrow = length(sp.prop), ncol = perms))
 
     if(q != 1){
-      rvec <- replicate(sim.rand,list())
-      for(i in 1:sim.rand){
+      rvec <- replicate(perms,list())
+      for(i in 1:perms){
         for(h in 1:length(sp.prop)){
           rvec[[i]][[h]] <- split(spp.vec, sample(length(rowSums(sp.prop[[h]])),
                                                   length(spp.vec), replace = TRUE)) # Randomize INDIVIDUALs into Sites
@@ -141,7 +141,7 @@ indipart <- function(species.num, h.level, n1, sim.rand, q, sp.prop){
                 colSums(DF1[[1]], na.rm = TRUE)) ^ q)) ^ (1 / (1 - q))
       })
 
-      for(i in 1:sim.rand){
+      for(i in 1:perms){
         for(h in 1:(length(sp.prop) - 1)){
           rand.betas.add[h,i] <- hyp.alpha[[i]][(h + 1)] - hyp.alpha[[i]][h]
         }
@@ -158,8 +158,8 @@ indipart <- function(species.num, h.level, n1, sim.rand, q, sp.prop){
     }
 
     if(q == 1){
-      rvec <- replicate(sim.rand,list())
-      for(i in 1:sim.rand){
+      rvec <- replicate(perms,list())
+      for(i in 1:perms){
         for(h in 1:length(sp.prop)){
           rvec[[i]][[h]] <- split(spp.vec, sample(length(rowSums(sp.prop[[h]])),
                                                   length(spp.vec), replace = TRUE)) # Randomize INDIVIDUALs into Sites
@@ -198,7 +198,7 @@ indipart <- function(species.num, h.level, n1, sim.rand, q, sp.prop){
                          colSums(DF1[[length(sp.prop)]], na.rm = TRUE))))
       })
 
-      for(i in 1:sim.rand){
+      for(i in 1:perms){
         for(h in 1:(length(sp.prop) - 1)){
           rand.betas.add[h,i] <- hyp.alpha[[i]][(h + 1)] - hyp.alpha[[i]][h]
         }
@@ -228,7 +228,7 @@ indipart <- function(species.num, h.level, n1, sim.rand, q, sp.prop){
 ## samplpart
 ## function for sample randomization partitioning
 
-samplpart <- function(species.num, h.level, n1, sim.rand, q, factors, sp.use){
+samplpart <- function(species.num, levels, n1, perms, q, factors, sp.use){
 
   spdat <- data.frame(species.num)
 
@@ -237,9 +237,9 @@ samplpart <- function(species.num, h.level, n1, sim.rand, q, factors, sp.use){
 
   for(i in 2:(n1)){
     if((i+1) == n1){
-      prene <- as.factor(factors[,h.level[n1]])
+      prene <- as.factor(factors[,levels[n1]])
     } else if(i == n1){
-      prene <- as.factor(factors[,h.level[n1]])
+      prene <- as.factor(factors[,levels[n1]])
     } else {
       prene <- as.factor(apply(factors[,c((i+1):n1)], 1, paste, collapse="."))
     }
@@ -318,7 +318,7 @@ samplpart <- function(species.num, h.level, n1, sim.rand, q, factors, sp.use){
       rand.alphas <- rand.beta.add <- rand.beta.mult <- rand.prop <- NULL
       rand.alphas.p1 <- NULL
 
-      for(j in 1:sim.rand){
+      for(j in 1:perms){
         num.list <-  lapply(
           lapply(yyg,function(DF1){
             dplyr::sample_n(data.frame(DF1), size = nrow(data.frame(DF1)),
@@ -382,7 +382,7 @@ samplpart <- function(species.num, h.level, n1, sim.rand, q, factors, sp.use){
       rand.alpha <- rand.gamma <- rand.alphas <- rand.beta.add <- NULL
       rand.beta.mult <- NULL
       rand.gammas <- NULL
-      for(j in 1:sim.rand){
+      for(j in 1:perms){
         num.list = data.frame(0);rand.prop = data.frame(0)
         num.list <- sample_n(data.frame(yyg), size = nrow(data.frame(yyg)),
                              replace = FALSE)
@@ -468,7 +468,7 @@ samplpart <- function(species.num, h.level, n1, sim.rand, q, factors, sp.use){
 ##                    : expected alpha diversity at the lowest ecologically
 ##                      important level
 ##            -  $Test
-##                    : "INDIVIDUAL" or "SAMPLE" - set by user, passed to object
+##                    : "ind" or "sample" - set by user, passed to object
 ##                      to be used in secondary and generic functions
 ##            -  $q
 ##                    : numeric - set by user, passed to object
@@ -485,26 +485,26 @@ samplpart <- function(species.num, h.level, n1, sim.rand, q, factors, sp.use){
 #'     well as nested designs. \code{partition} can run hypothesis testing based
 #'     on distributions generated from two randomizations methods (see below).
 #'
-#' @param sp Data frame containing a species matrix that includes variables
+#' @param data Data frame containing a species matrix that includes variables
 #'     coding for the different scales by which diversity is to be partitioned.
 #'     The columns containing levels by which diversity is to be partitioned
 #'     \strong{must} be of class \code{factor}.
-#' @param h.level Vector or list containing column names coding for the
+#' @param levels Vector or list containing column names coding for the
 #'     different scales by which diversity is to be partitioned. These must be
 #'     in increasing scale.
 #' @param low.level Integer representing the lowest level of diversity to be
 #'     partitioned. This is the lowest ecologically relevant level. Defaults to
-#'     \code{1}. Must be \code{>1} when \code{hyp.test = "SAMPLE"}.
+#'     \code{1}. Must be \code{>1} when \code{method = "sample"}.
 #' @param q Integer representing Hill Number q-diversity metrics. \code{0}
 #'     represents species richness; \code{1} represents Shannon-diversity; and
 #'     \code{2} represents Simpsons-diversity. See Jost (2007) for more
 #'     information.
-#' @param hyp.test Method of hypothesis testing to be used; for hypothesis
-#'     testing: \code{hyp.test = "INDIVIDUAL"} and \code{hyp.test = "SAMPLE"};
-#'     for calculation of observed values only: \code{hyp.test = "NONE"}.
-#' @param sim.rand Integer representing the number of randomizations to be run
+#' @param method Method of hypothesis testing to be used; for hypothesis
+#'     testing: \code{method = "ind"} and \code{method = "sample"};
+#'     for calculation of observed values only: \code{method = "none"}.
+#' @param perms Integer representing the number of randomizations to be run
 #'     for hypothesis testing; defaults to \code{1000}. If
-#'     \code{hyp.test = "NONE"}, \code{sim.rand} can be ignored.
+#'     \code{method = "none"}, \code{perms} can be ignored.
 #' @param x object returned by \code{partition} of class \code{"partition"}
 #' @param ... further arguments passed to or from other methods
 #'
@@ -523,11 +523,11 @@ samplpart <- function(species.num, h.level, n1, sim.rand, q, factors, sp.use){
 #'     hierarchical sampling designs (multiple nested levels).
 #' @details \code{partition} calculates alpha and beta diversity and uses
 #'     randomization to derive expected values of alpha and beta diversity that
-#'     would be obtained if individuals (\code{INDIVIDUAL}) or samples
-#'     (\code{SAMPLE}) were randomly distributed. This randomization allows for
+#'     would be obtained if individuals (\code{ind}) or samples
+#'     (\code{sample}) were randomly distributed. This randomization allows for
 #'     significance testing of the observed diversity estimates. The statistical
-#'      rationale and operational description of \code{INDIVIDUAL}- and
-#'     \code{SAMPLE}-based randomization can be found in Crist et al. (2003).
+#'      rationale and operational description of \code{ind}- and
+#'     \code{sample}-based randomization can be found in Crist et al. (2003).
 #' @details The \code{partition} function is the R equivalent of the PARTITION
 #'     software developed by Crist et al. (2003).
 #' @details At the highest sampling level (h), the diversity components are
@@ -550,12 +550,12 @@ samplpart <- function(species.num, h.level, n1, sim.rand, q, factors, sp.use){
 #' @return \item{\code{$Rand.Beta.Mult}}{expected multipicative Beta diversity}
 #' @return \item{\code{$Rand.Alpha}}{expected alpha diversity at the lowest
 #'     ecologically important level (set by \code{low.level})}
-#' @return \item{\code{$Test}}{\code{"INDIVIDUAL"}, \code{"SAMPLE"}, or
-#'     \code{"NONE"} - set by \code{hyp.test}, passed to object to be used in
+#' @return \item{\code{$Test}}{\code{"ind"}, \code{"sample"}, or
+#'     \code{"none"} - set by \code{method}, passed to object to be used in
 #'     support and generic functions}
 #' @return \item{\code{$q}}{integer set by \code{q}, passed to object to be used
 #'     in support and generic functions}
-#' @return \item{\code{$Randomizations}}{integer set by \code{sim.rand}, passed
+#' @return \item{\code{$Randomizations}}{integer set by \code{perms}, passed
 #'     to object to be used in support and generic functions}
 #'
 #' @importFrom plyr rbind.fill
@@ -572,27 +572,27 @@ samplpart <- function(species.num, h.level, n1, sim.rand, q, factors, sp.use){
 #' @examples
 #' \dontrun{
 #' part.obj <- partition(sp = spiders.spp,
-#'                       h.level = c("SAMPLE", "TREESP"),
+#'                       levels = c("SAMPLE", "TREESP"),
 #'                       low.level = 1,
 #'                       q = 0,
-#'                       hyp.test = "INDIVIDUAL",
-#'                       sim.rand = 1000)
+#'                       method = "ind",
+#'                       perms = 1000)
 #'
 #' print(part.obj)
 #' }
 #' @export
-partition <- function(sp, h.level, low.level = 1, q = 0, hyp.test = "INDIVIDUAL", sim.rand = 1000) {
-  if(low.level == 1 & hyp.test == "SAMPLE"){
+partition <- function(data, levels, low.level = 1, q = 0, method = "ind", perms = 1000) {
+  if(low.level == 1 & method == "sample"){
     stop("Cannot have 1st level be lowest level of analysis with sample-based
          randomizations")
   }
-  n1 <- length(h.level)
+  n1 <- length(levels)
   s <- NULL; spdat <- NULL; rich <- NULL; num <- NULL; sp.mat <- NULL
   alpha <- NULL; beta.add <- NULL; beta.mult <- NULL;	sp.prop <- NULL
   sp.prop2 <- NULL; sp.prop3 <- NULL
-  species.list <- sapply(sp, is.numeric)
-  species.num <- sp[ , species.list]
-  factors <- data.frame(sp[ , h.level])
+  species.list <- sapply(data, is.numeric)
+  species.num <- data[ , species.list]
+  factors <- data.frame(sp[ , levels])
   sp.use <- cbind(species.num, factors)
   for(i in low.level:n1){
     spdat[[i]] <- data.frame(species.num)
@@ -676,16 +676,16 @@ partition <- function(sp, h.level, low.level = 1, q = 0, hyp.test = "INDIVIDUAL"
   }
   else {stop("ERROR: q-diversity metric must be a numeric operator")}
 
-  if(hyp.test == "INDIVIDUAL"){
-    Output <- indipart(species.num, h.level, n1, sim.rand, q, sp.prop)
+  if(method == "ind"){
+    Output <- indipart(species.num, levels, n1, perms, q, sp.prop)
 
     pval.add <- pval.mult <- NULL
 
     for(i in 1:length(Output$Rand.Beta.Mult)){
-      pval.add[i]<- 1-(sum(beta.add[i]>Output$Rand.Beta.Add[i,])/sim.rand)
-      pval.mult[i]<- 1-(sum(beta.mult[i]>Output$Rand.Beta.Mult[[i]])/sim.rand)
+      pval.add[i]<- 1-(sum(beta.add[i]>Output$Rand.Beta.Add[i,])/perms)
+      pval.mult[i]<- 1-(sum(beta.mult[i]>Output$Rand.Beta.Mult[[i]])/perms)
     }
-    pval.alph <- 1-(sum(alpha[1]>Output$Rand.Alpha)/sim.rand)
+    pval.alph <- 1-(sum(alpha[1]>Output$Rand.Alpha)/perms)
 
     hyp.pvals <- matrix(c(pval.alph,pval.add[1:length(sp.prop)], pval.alph,pval.mult[1:length(sp.prop)]),
                         nrow = 2, byrow = TRUE)
@@ -697,25 +697,25 @@ partition <- function(sp, h.level, low.level = 1, q = 0, hyp.test = "INDIVIDUAL"
                               "Alpha" = alpha[1],
                               "Additive Beta" = beta.add,
                               "Multiplicative Beta" = beta.mult)
-    Output$Test           = hyp.test
+    Output$Test           = method
     Output$q              = q
-    Output$Randomizations = sim.rand
+    Output$Randomizations = perms
     Output$Hyp            = hyp.table
 
     class(Output) <- c("partition", class(Output))
     return(Output)     # when calling function, return all three indices
   }
   #####################################Sample Hypothesis Test
-  if(hyp.test == "SAMPLE"){
-    Output <- samplpart(species.num, h.level, n1, sim.rand, q, factors, sp.use)
+  if(method == "sample"){
+    Output <- samplpart(species.num, levels, n1, perms, q, factors, sp.use)
 
     pval.alph <- pval.add <- pval.mult <- NULL
 
-    pval.alph <- 1 - (sum(alpha[1]>Output$Rand.Alpha)/sim.rand)
+    pval.alph <- 1 - (sum(alpha[1]>Output$Rand.Alpha)/perms)
 
     for(i in 1:length(Output$Rand.Beta.Add)){
-      pval.add[i]<- 1 - (sum(beta.add[i]>as.vector(Output$Rand.Beta.Add[[i]]))/(sim.rand))
-      pval.mult[i]<- 1 - (sum(beta.mult[i]>as.vector(Output$Rand.Beta.Mult[[i]]))/(sim.rand))
+      pval.add[i]<- 1 - (sum(beta.add[i]>as.vector(Output$Rand.Beta.Add[[i]]))/(perms))
+      pval.mult[i]<- 1 - (sum(beta.mult[i]>as.vector(Output$Rand.Beta.Mult[[i]]))/(perms))
     }
     hyp.pvals <- matrix(c(pval.alph, pval.add[1:length(sp.prop)], pval.alph, pval.mult[1:length(sp.prop)]),
                         nrow = 2, byrow = TRUE)
@@ -727,16 +727,16 @@ partition <- function(sp, h.level, low.level = 1, q = 0, hyp.test = "INDIVIDUAL"
                               "Alpha" = alpha[1],
                               "Additive Beta" = beta.add,
                               "Multiplicative Beta" = beta.mult)
-    Output$Test           = hyp.test
+    Output$Test           = method
     Output$q              = q
-    Output$Randomizations = sim.rand
+    Output$Randomizations = perms
     Output$Hyp            = hyp.table
 
     class(Output) <- c("partition", class(Output))
     return(Output)     # when calling function, return all three indices
   }
   #####################################No Hypothesis Test
-  if(hyp.test == "NONE"){
+  if(method == "none"){
     Output <- list("Div" = c("Gamma" = gamma,
                              "Alpha" = alpha[1],
                              "Additive Beta" = beta.add,
@@ -745,7 +745,7 @@ partition <- function(sp, h.level, low.level = 1, q = 0, hyp.test = "INDIVIDUAL"
   return(Output)
   }
 
-  else{stop('hyp.test must be set to "NONE", "INDIVIDUAL", or "SAMPLE"')}
+  else{stop('method must be set to "none", "ind", or "sample"')}
 
   }
 

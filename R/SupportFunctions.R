@@ -31,14 +31,14 @@
 #' @examples
 #' \dontrun{
 #' ## Plot a stacked bar chart of the additive partitioned data
-#' partiplot(part.obj, beta.type = "add", plot.type = "bar")
+#' plot_partition(part.obj, beta.type = "add", plot.type = "bar")
 #'
 #' ## Plot a line plot of the multiplicative partitioned data
-#' partiplot(part.obj, beta.type = "mult", plot.type = "line")
+#' plot_partition(part.obj, beta.type = "mult", plot.type = "line")
 #' }
 #' @export
 #'
-partiplot <- function(part.obj, beta.type = "add", plot.type = "bar"){
+plot_partition <- function(part.obj, beta.type = "add", plot.type = "bar"){
   if(!is(part.obj,"partition")){
     stop("'part.obj' must be the set output of the 'partition' function")
   }

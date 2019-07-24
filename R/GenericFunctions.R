@@ -16,7 +16,7 @@
 #' @return The observed and mean expected values of alpha and beta diversity, as
 #'     well as the the p-values (number of randomizations < observed diversity)
 #'     of each diversity level and interpretations of these. Values are rounded to number of places given by \eqn{1/# Simulations}
-#' @return \item{Test}{\code{"INDIVIDUAL"} or \code{"SAMPLE"} randomization as specified in \code{partition} function}
+#' @return \item{Test}{\code{"ind"} or \code{"sample"} randomization as specified in \code{partition} function}
 #' @return \item{P-value}{\code{"one-sided"} or \code{"two-sided"} interpretation of results}
 #' @return \item{Randomizations}{number of randomizations run as specified in \code{partition} function}
 #' @return \item{q}{Hill number as specified in \code{partition} function}
@@ -147,9 +147,9 @@ summary.partition = function(object, p.value = "one-sided",...){
   colnames(partab) <- c(sprintf("%14s",""), sprintf("%6s",""))
   partab$Observed <- Obs; partab$Expected <- Expt
   partab$"Pr(< Obs)" <- Hyps; partab$sig <- Sigdot; colnames(partab)[6] <- "   "
-  part_summ <- list("Test"  = Test,
+  part_summ <- list("Method"  = Test,
                     "P-value" = p.value,
-                    "Radnomizations" = rands,
+                    "Randomizations" = rands,
                     "q"     = q,
                     "Gamma" = Gamma,
                     "Table" = partab,
@@ -162,7 +162,7 @@ summary.partition = function(object, p.value = "one-sided",...){
 #' @export
 ## S3 method for class "summary_partition"
 print.summary_partition = function(x,...){
-  cat(paste("Test:",x[[1]]),sep="\n")
+  cat(paste("Method:",x[[1]]),sep="\n")
   cat(paste("P-value:",x[[2]]),sep="\n")
   cat(paste("Randomizations:",x[[3]]),sep="\n")
   cat(paste("q:",x[[4]]),sep="\n")

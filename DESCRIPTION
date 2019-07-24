@@ -13,7 +13,7 @@ Description: Heirarchical partitioning of diversity for community ecologists.
     be found in Crist et al. (2003). This package can utilize unbalanced data,
     can use both additive and multiplicative species richness and q-diversity
     measures of diversity, and both nested and non-nested sampling designs.
-Date: "`r Sys.Date()`"
+Date: 7/24/2019
 Authors@R: c(
     person("Michael", "Mahon", , "mahonmb@miamioh.edu", role = c("aut","cre")),
     person("Michael", "Cunningham-Minnick", role = "aut"),

@@ -11,7 +11,7 @@
 #'
 #' @section Support Functions:
 #' The support functions provide an opportunity to visualize the data and output of
-#'     the \code{\link{partition}} function. \code{\link{partiplot}} visualizes the
+#'     the \code{\link{partition}} function. \code{\link{plot_partition}} visualizes the
 #'     output of \code{\link{partition}}. \code{\link{summary.partition}} provides
 #'     observed diversity, expected diversity, and associated p-values (based on
 #'     randomizations). 
