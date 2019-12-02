@@ -592,7 +592,7 @@ partition <- function(data, levels, low.level = 1, q = 0, method = "ind", perms 
   sp.prop2 <- NULL; sp.prop3 <- NULL
   species.list <- sapply(data, is.numeric)
   species.num <- data[ , species.list]
-  factors <- data.frame(sp[ , levels])
+  factors <- data.frame(data[ , levels])
   sp.use <- cbind(species.num, factors)
   for(i in low.level:n1){
     spdat[[i]] <- data.frame(species.num)
