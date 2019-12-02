@@ -98,7 +98,7 @@ btl.q1 <- partition(data = Beetles, levels = c("TREE", "Hab_St", "SITE", "ECO"),
 
 #> No randomization (just observed values) of Simpson Diversity
 btl.q2 <- partition(data = Beetles, levels = c("TREE", "Hab_St", "SITE", "ECO"),
-                    low.level = 1, q = 2, hyp.test = "none")
+                    low.level = 1, q = 2, method = "none")
 
 ```
 
@@ -118,7 +118,7 @@ Finally, you can visualize change in alpha- and beta-diversity by using a line p
 summary(btl.q0)
 
 #> Summary of Shannon diversity partitioning (a priori high AND low)
-summary(btl.q1, p.val = "two-sided")
+summary(btl.q1, p.value = "two-sided")
 
 #> Additive beta-diversity visualized with a line plot
 plot_partition(btl.q1, beta.type = "add", plot.type = "line")
