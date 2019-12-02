@@ -58,7 +58,7 @@ plot_partition <- function(part.obj, beta.type = "add", plot.type = "bar"){
   rand.alpha <- mean(as.numeric(part.obj$Rand.Alpha))
   rand.alpha.ci <- 1.96*sd(as.numeric(part.obj$Rand.Alpha))
   for(i in 1:(levels)){
-    if(part.obj$Test == "SAMPLE"){
+    if(part.obj$Test %in% c("SAMPLE", "sample")){
       add.beta.rand[i] <- mean(as.numeric(part.obj$Rand.Beta.Add[[i]]))
       add.beta.rand.ci[i] <- 1.96*sd(as.numeric(part.obj$Rand.Beta.Add[[i]]))
     } else {
