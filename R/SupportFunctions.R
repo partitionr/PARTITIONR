@@ -17,7 +17,7 @@
 #'     represents a line plot of the change in alpha- and beta-diversity of both observed
 #'     and expected data. Error bars represent 95\% CIs of null statistical distribution.
 #'
-#' @details Function \code{partiplot} visualizes the partitioned data from an object of
+#' @details Function \code{plot_partition} visualizes the partitioned data from an object of
 #'     class \code{partition}.
 #' @details The function uses \code{\link[ggplot2]{ggplot}} to visualize the partitioned data.
 #'     To save the graphic, use the \code{\link[ggplot2]{ggsave}]} function.
@@ -58,7 +58,7 @@ plot_partition <- function(part.obj, beta.type = "add", plot.type = "bar"){
   rand.alpha <- mean(as.numeric(part.obj$Rand.Alpha))
   rand.alpha.ci <- 1.96*sd(as.numeric(part.obj$Rand.Alpha))
   for(i in 1:(levels)){
-    if(part.obj$Test == "SAMPLE"){
+    if(part.obj$Test == "sample"){
       add.beta.rand[i] <- mean(as.numeric(part.obj$Rand.Beta.Add[[i]]))
       add.beta.rand.ci[i] <- 1.96*sd(as.numeric(part.obj$Rand.Beta.Add[[i]]))
     } else {

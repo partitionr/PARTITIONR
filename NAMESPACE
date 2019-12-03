@@ -3,7 +3,7 @@
 S3method(print,partition)
 S3method(print,summary_partition)
 S3method(summary,partition)
-export(partiplot)
+export(plot_partition)
 export(partition)
 export(partition_parallel)
 import(ggplot2)

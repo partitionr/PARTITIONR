@@ -119,7 +119,7 @@ summary.partition = function(object, p.value = "one-sided",...){
   Hyps <- sprintf("%9s",sprintf("%.4f",round(as.numeric(Hyps),(nchar(format(1/rands, scientific = FALSE)) - 2))))
   Obs <- sprintf("%8s",sprintf("%.3f",round(as.numeric(object$Div[-1]),3)))
   Expt <- mean(as.numeric(object$Rand.Alpha))
-  if(object$Test == "SAMPLE"){
+  if(object$Test == "sample"){
     for(i in 1:length(object$Rand.Beta.Add)){
       mean.betas.add[i] <- mean(as.numeric(object$Rand.Beta.Add[[i]]))
     }
